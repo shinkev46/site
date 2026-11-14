@@ -101,6 +101,7 @@
     background: rgb(238 240 242 / .92); border: 1px solid var(--v-hair-strong); border-radius: var(--v-radius); padding: .7rem .95rem .75rem; }
   .title__price b { font-family: var(--v-font-display); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .title__price span { display: block; color: var(--v-ink-soft); }
+  .title__calc-link { display: inline-block; font-size: var(--v-t-sm); color: var(--v-accent); text-decoration: underline; text-underline-offset: .2em; }
   .title__foot { position: relative; z-index: 6; display: flex; justify-content: space-between; align-items: end; gap: var(--v-4); padding-top: var(--v-4); border-top: 1px solid var(--v-hair-strong); font-size: var(--v-t-sm); color: var(--v-ink-soft); }
   .title__foot b { font-family: var(--v-font-display); font-weight: 600; color: var(--v-accent); font-variant-numeric: tabular-nums; margin-right: .6em; }
   /* подпись состояния: справа внизу, четыре варианта стопкой, активный виден. Меняется вместе с кадром */
@@ -334,6 +335,42 @@
     .estimate__fig .fig { aspect-ratio: 4 / 3; }
   }
 
+  /* ---- демо-калькулятор: прикидка стоимости ------------------------------ */
+  .calc { background: var(--v-surface); border-top: 1px solid var(--v-hair); border-bottom: 1px solid var(--v-hair); }
+  .calc__intro { max-width: 62ch; }
+  .calc__intro h2 { font-size: var(--v-t-2xl); }
+  .calc__intro p { margin-top: var(--v-5); color: var(--v-ink-soft); }
+  .calc__intro p b { color: var(--v-ink); font-weight: 600; }
+  .calc__box { margin-top: var(--v-7); border-top: 1px solid var(--v-hair); padding-top: var(--v-6); }
+  .calc__row { display: flex; flex-wrap: wrap; gap: var(--v-3); align-items: center; }
+  .calc select, .calc input[type="number"] { font: inherit; font-size: var(--v-t-sm); color: var(--v-ink); background: var(--v-canvas);
+    border: 1px solid var(--v-hair-strong); border-radius: var(--v-radius); padding: .6em .8em; }
+  .calc select { min-width: 12rem; }
+  .calc input[type="number"] { width: 6rem; }
+  .calc__unit { font-size: var(--v-t-sm); color: var(--v-ink-soft); }
+  .calc__add { margin-left: auto; }
+  .calc__lines li { display: grid; grid-template-columns: 1fr auto auto auto; gap: var(--v-3); align-items: center;
+    padding: var(--v-3) 0; border-top: 1px solid var(--v-hair); font-size: var(--v-t-sm); }
+  .calc__lines li b { font-weight: 600; }
+  .calc__lines .calc__qty { width: 4.5rem; }
+  .calc__lines .calc__sum { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--v-accent); white-space: nowrap; }
+  .calc__lines .calc__del { border: none; background: none; color: var(--v-ink-soft); font-size: var(--v-t-lg); line-height: 1; cursor: pointer; padding: .2em .4em; }
+  .calc__lines .calc__del:hover { color: var(--v-accent); }
+  .calc__empty { padding: var(--v-4) 0; border-top: 1px solid var(--v-hair); color: var(--v-ink-soft); font-size: var(--v-t-sm); }
+  .calc__total { display: flex; justify-content: space-between; align-items: baseline; padding: var(--v-4) 0;
+    border-top: 1px solid var(--v-hair-strong); font-size: var(--v-t-lg); }
+  .calc__total b { font-family: var(--v-font-display); font-variant-numeric: tabular-nums; color: var(--v-accent); }
+  .calc__note { margin-top: var(--v-5); display: flex; flex-wrap: wrap; align-items: center; gap: var(--v-4);
+    font-size: var(--v-t-sm); color: var(--v-ink-soft); }
+  @media (max-width: 860px) {
+    .calc__row { flex-direction: column; align-items: stretch; }
+    .calc__add { margin-left: 0; }
+    .calc select, .calc input[type="number"] { width: 100%; }
+    .calc__lines li { grid-template-columns: 1fr auto; grid-template-rows: auto auto; row-gap: var(--v-2); }
+    .calc__lines .calc__sum { grid-column: 2; justify-self: end; }
+    .calc__lines .calc__del { grid-column: 2; grid-row: 1; justify-self: end; }
+  }
+
   /* ---- колофон: как оформить заказ -------------------------------------- */
   .colophon { background: var(--v-surface); border-top: 1px solid var(--v-hair); padding-block: var(--v-9) var(--v-6); }
   .colophon__grid { display: grid; grid-template-columns: 7fr 5fr; gap: var(--v-7) clamp(2rem, 6vw, 6rem); align-items: start; }
@@ -421,6 +458,7 @@
               <!-- {{ссылка-расчёта}}: ссылка на форму заявки (в Тильде #popup:schet) или мессенджер. Одна и та же во всех кнопках -->
               <a class="v-btn" href="{{ссылка-расчёта}}">Получить счёт</a>
               <p class="title__price">Цена — по каждой позиции отдельно: зависит от толщины, покрытия и партии, поэтому <b>уточняем в счёте</b>. <span>Присылаем счёт в течение рабочего дня после вашего списка.</span></p>
+              <a class="title__calc-link" href="#calc">Прикинуть стоимость онлайн</a>
             </div>
           </div>
           <div class="title__foot">
@@ -478,7 +516,7 @@
           <h2 class="v-display">Металлочерепица или профлист — по сортаменту, не на глаз</h2>
           <p>Металлочерепица и профнастил нужного профиля и толщины, доборные элементы и водосток в тон, утеплитель под кровельный пирог. <b>Называете марку и площадь ската</b> — считаем лист в лист, с нахлёстом и доборами.</p>
           <dl class="facts">
-            <div><dt>Что на складе</dt><dd>Металлочерепица и профлист нескольких профилей и толщин, водосточные системы, утеплитель для кровельного пирога.</dd></div>
+            <div><dt>Что на складе</dt><dd>Металлочерепица и профлист нескольких профилей и толщин, водосточные системы, утеплитель для кровельного пирога. <b>Демо-цены:</b> металлочерепица от 650 ₽/м², профлист от 480 ₽/м², утеплитель от 210 ₽/м², водосток от 390 ₽/м.п.</dd></div>
             <div><dt>Что уточняем</dt><dd>Марку профиля, цвет по каталогу RAL, площадь и уклон ската — от этого зависит раскрой и количество доборов.</dd></div>
             <div><dt>Отгрузка</dt><dd>Листы грузим по счёту со склада или привозим вместе с остальным заказом — смотрите главу «Доставка».</dd></div>
           </dl>
@@ -507,7 +545,7 @@
             <div class="frame__cue" data-v-cue="0 0.34 0 0.05">
               <span class="v-label">Материал</span>
               <h3>Виниловый и металлический сайдинг, фасадные панели</h3>
-              <p>Подбираем под дом: сайдинг под дерево или камень, фасадные панели с утеплителем. <b>Расход считаем по периметру и высоте стен</b>, не «на глаз».</p>
+              <p>Подбираем под дом: сайдинг под дерево или камень, фасадные панели с утеплителем. <b>Расход считаем по периметру и высоте стен</b>, не «на глаз». <b>Демо-цены:</b> сайдинг от 340 ₽/м², фасадная панель от 890 ₽/м².</p>
             </div>
             <div class="frame__cue" data-v-cue="0.32 0.66 0.05 0.05">
               <span class="v-label">Доборные</span>
@@ -553,7 +591,7 @@
           <h2 class="v-display">Профлист, евроштакетник или рабица — по участку</h2>
           <p>Для глухого забора берём профлист или евроштакетник, для временного и хозяйственного — рабицу. Столбы и лаги подбираем под высоту и ветровую нагрузку. <b>Количество считаем по длине ограждения</b>, а не «примерно хватит».</p>
           <dl class="facts">
-            <div><dt>Что на складе</dt><dd>Профлист и евроштакетник нескольких цветов, рабица в рулонах, столбы, лаги и крепёж.</dd></div>
+            <div><dt>Что на складе</dt><dd>Профлист и евроштакетник нескольких цветов, рабица в рулонах, столбы, лаги и крепёж. <b>Демо-цены:</b> профлист от 470 ₽/м², евроштакетник от 410 ₽/м.п., рабица от 95 ₽/м².</dd></div>
             <div><dt>Что уточняем</dt><dd>Длину и высоту забора, тип калитки и ворот, нужны ли столбы с крышками.</dd></div>
             <div><dt>Отгрузка</dt><dd>Длинномер (столбы, лаги) возим отдельно от листового материала — координируем машину заранее.</dd></div>
           </dl>
@@ -678,10 +716,10 @@
           <ul class="lines" data-v-in data-v-stagger="50">
             <li><span>01</span><h3>Ваш список позиций</h3><p>Кровля, фасад или забор: марка, толщина, цвет и количество по каждой позиции. Можно прислать фото профиля, если не знаете название.</p></li>
             <li><span>02</span><h3>Спецификация в ответ</h3><p>Каждая позиция отдельной строкой: наименование, артикул, количество, цена за единицу и за партию.</p></li>
-            <li><span>03</span><h3>Что в счёте по кровле</h3><p>Металлочерепица или профлист, доборные элементы, водосток, утеплитель — если нужны.</p></li>
-            <li><span>04</span><h3>Что в счёте по фасаду</h3><p>Сайдинг или фасадные панели, доборные планки, крепёж.</p></li>
-            <li><span>05</span><h3>Что в счёте по забору</h3><p>Профлист, евроштакетник или рабица, столбы, лаги, крепёж.</p></li>
-            <li><span>06</span><h3>Доставка и разгрузка</h3><p>Отдельной строкой: по {{город}} и области, манипулятор — если нужен.</p></li>
+            <li><span>03</span><h3>Что в счёте по кровле</h3><p>Металлочерепица или профлист, доборные элементы, водосток, утеплитель — если нужны. <b>Демо-цены:</b> от 210 до 650 ₽/м².</p></li>
+            <li><span>04</span><h3>Что в счёте по фасаду</h3><p>Сайдинг или фасадные панели, доборные планки, крепёж. <b>Демо-цены:</b> от 340 до 890 ₽/м².</p></li>
+            <li><span>05</span><h3>Что в счёте по забору</h3><p>Профлист, евроштакетник или рабица, столбы, лаги, крепёж. <b>Демо-цены:</b> от 95 до 470 ₽/ед.</p></li>
+            <li><span>06</span><h3>Доставка и разгрузка</h3><p>Отдельной строкой: по {{город}} и области, манипулятор — если нужен. <b>Демо-цена:</b> от 3 500 ₽ по городу.</p></li>
             <li><span>07</span><h3>Что не входит</h3><p>Монтаж и демонтаж, подключение водостока к ливнёвке, покраска на объекте. Не возим: {{что не возим}}.</p></li>
             <li><span>08</span><h3>Оплата и накладная</h3><p>Накладная и счёт на оплату — после подтверждения спецификации. Предоплата или полная оплата: <b>уточнить</b>.</p></li>
           </ul>
@@ -690,6 +728,38 @@
           <div class="fig"><img src="assets/material.webp" alt="Лист металлочерепицы крупным планом" width="1200" height="1600" loading="lazy" decoding="async"></div>
           <figcaption>Марка, толщина и партия каждого листа — в спецификации к счёту.</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <!-- ДЕМО-КАЛЬКУЛЯТОР: прикидка стоимости. Цены ниже условные, для показа логики счёта —
+         заменить на реальный прайс {{компания}}, когда заказчик пришлёт материалы. -->
+    <section class="v-section calc" data-v-act="flow" id="calc" aria-label="Прикидка стоимости">
+      <div class="v-wrap">
+        <div class="calc__intro" data-v-in data-v-stagger="70">
+          <span class="v-label">Демо-калькулятор · цены условные</span>
+          <h2 class="v-display">Прикидка стоимости онлайн</h2>
+          <p>Выберите группу и материал, укажите количество — строка ляжет в черновик счёта. Количество можно поменять, позицию — убрать. <b>Это пример</b>, как складывается счёт: цены ниже демонстрационные, точные — в счёте после вашего списка.</p>
+        </div>
+        <div class="calc__box">
+          <div class="calc__row">
+            <select id="calcGroup" aria-label="Группа товара">
+              <option value="roof">Кровля</option>
+              <option value="facade">Фасад</option>
+              <option value="fence">Забор</option>
+            </select>
+            <select id="calcMaterial" aria-label="Материал"></select>
+            <input id="calcQty" type="number" min="1" step="1" value="10" aria-label="Количество">
+            <span class="calc__unit" id="calcUnit">м²</span>
+            <button type="button" class="v-btn calc__add" id="calcAdd">Добавить в счёт</button>
+          </div>
+          <ul class="calc__lines" id="calcLines"></ul>
+          <p class="calc__empty" id="calcEmpty">Пока пусто — добавьте первую позицию.</p>
+          <div class="calc__total">
+            <span>Итого по черновику</span>
+            <b id="calcTotal">0 ₽</b>
+          </div>
+          <p class="calc__note">Демо-цены, без учёта толщины, цвета и партии. <a class="v-btn" href="{{ссылка-расчёта}}">Получить точный счёт</a></p>
+        </div>
       </div>
     </section>
 
@@ -837,6 +907,107 @@
     window.addEventListener('load', measure);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     measure();
+  })();
+
+  // Демо-калькулятор «Прикидка стоимости»: цены условные, посетитель собирает черновик
+  // счёта сам — добавляет позицию, меняет количество, убирает строку. Ничего никуда
+  // не отправляется и не сохраняется между визитами — это витрина логики, а не админка.
+  (function () {
+    var DATA = {
+      roof: { items: [
+        { id: 'metallocherepitsa', name: 'Металлочерепица', price: 650, unit: 'м²' },
+        { id: 'proflist-roof', name: 'Профлист кровельный', price: 480, unit: 'м²' },
+        { id: 'vodostok', name: 'Водосток', price: 390, unit: 'м.п.' },
+        { id: 'uteplitel', name: 'Утеплитель кровельный', price: 210, unit: 'м²' }
+      ] },
+      facade: { items: [
+        { id: 'siding', name: 'Сайдинг виниловый', price: 340, unit: 'м²' },
+        { id: 'facade-panel', name: 'Фасадная панель', price: 890, unit: 'м²' }
+      ] },
+      fence: { items: [
+        { id: 'proflist-fence', name: 'Профлист заборный', price: 470, unit: 'м²' },
+        { id: 'shtaketnik', name: 'Евроштакетник', price: 410, unit: 'м.п.' },
+        { id: 'rabitsa', name: 'Рабица', price: 95, unit: 'м²' }
+      ] }
+    };
+    var groupEl = document.getElementById('calcGroup');
+    if (!groupEl) return;
+    var matEl = document.getElementById('calcMaterial');
+    var qtyEl = document.getElementById('calcQty');
+    var unitEl = document.getElementById('calcUnit');
+    var addBtn = document.getElementById('calcAdd');
+    var linesEl = document.getElementById('calcLines');
+    var emptyEl = document.getElementById('calcEmpty');
+    var totalEl = document.getElementById('calcTotal');
+    var lines = [], uid = 0;
+
+    function fmt(n) { return Math.round(n).toLocaleString('ru-RU') + ' \u20BD'; }
+    function materialById(id) {
+      var items = DATA[groupEl.value].items, i;
+      for (i = 0; i < items.length; i++) if (items[i].id === id) return items[i];
+      return items[0];
+    }
+    function lineByUid(uidv) {
+      var i;
+      for (i = 0; i < lines.length; i++) if (lines[i].uid === uidv) return lines[i];
+      return null;
+    }
+    function total() {
+      var s = 0, i;
+      for (i = 0; i < lines.length; i++) s += lines[i].price * lines[i].qty;
+      return s;
+    }
+    function fillMaterials() {
+      var items = DATA[groupEl.value].items, html = '', i;
+      for (i = 0; i < items.length; i++) html += '<option value="' + items[i].id + '">' + items[i].name + ' \u2014 ' + items[i].price + ' \u20BD/' + items[i].unit + '</option>';
+      matEl.innerHTML = html;
+      syncUnit();
+    }
+    function syncUnit() { unitEl.textContent = materialById(matEl.value).unit; }
+    function render() {
+      emptyEl.style.display = lines.length ? 'none' : '';
+      var html = '', i, l;
+      for (i = 0; i < lines.length; i++) {
+        l = lines[i];
+        html += '<li data-uid="' + l.uid + '">' +
+          '<span><b>' + l.name + '</b> \u00B7 ' + l.price + ' \u20BD/' + l.unit + '</span>' +
+          '<input class="calc__qty" type="number" min="1" step="1" value="' + l.qty + '" data-uid="' + l.uid + '" aria-label="Количество">' +
+          '<span class="calc__sum">' + fmt(l.price * l.qty) + '</span>' +
+          '<button type="button" class="calc__del" data-uid="' + l.uid + '" aria-label="Убрать позицию">\u00D7</button></li>';
+      }
+      linesEl.innerHTML = html;
+      totalEl.textContent = fmt(total());
+    }
+    groupEl.addEventListener('change', fillMaterials);
+    matEl.addEventListener('change', syncUnit);
+    addBtn.addEventListener('click', function () {
+      var it = materialById(matEl.value);
+      var qty = Math.max(1, parseInt(qtyEl.value, 10) || 1);
+      uid++;
+      lines.push({ uid: uid, name: it.name, price: it.price, unit: it.unit, qty: qty });
+      render();
+    });
+    linesEl.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== linesEl && (!t.classList || !t.classList.contains('calc__del'))) t = t.parentNode;
+      if (!t || t === linesEl) return;
+      var uidv = Number(t.getAttribute('data-uid')), next = [], i;
+      for (i = 0; i < lines.length; i++) if (lines[i].uid !== uidv) next.push(lines[i]);
+      lines = next;
+      render();
+    });
+    linesEl.addEventListener('input', function (e) {
+      if (!e.target.classList.contains('calc__qty')) return;
+      var uidv = Number(e.target.getAttribute('data-uid'));
+      var l = lineByUid(uidv);
+      if (!l) return;
+      l.qty = Math.max(1, parseInt(e.target.value, 10) || 1);
+      var sumEl = e.target.parentNode.querySelector('.calc__sum');
+      if (sumEl) sumEl.textContent = fmt(l.price * l.qty);
+      totalEl.textContent = fmt(total());
+    });
+    fillMaterials();
+    render();
   })();
 </script>
 </body>
